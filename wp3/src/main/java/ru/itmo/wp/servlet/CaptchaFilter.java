@@ -22,7 +22,7 @@ public class CaptchaFilter extends HttpFilter {
                         "<body>\n" +
                         "<div class=\"middle\">\n" +
                         "    <main>\n" +
-                        "        <img src=\"data:image/png;base64,$$capthaImage$$\" alt=\"captcha\">\n" +
+                        "        <img src=\"data:image/png;base64,$$captchaImage$$\" alt=\"captcha\">\n" +
                         "        <form action=\"/captcha-ans\" method=\"post\">\n" +
                         "            <label>Enter number from the picture: </label>\n" +
                         "            <input name=\"answer\">\n" +
@@ -63,7 +63,8 @@ public class CaptchaFilter extends HttpFilter {
         }
         byte[] img = ImageUtils.toPng(number);
         String resultCaptcha = captchaHtml.replace("$$requestURI$$", request.getRequestURI())
-                                            .replace("$$capthaImage$$", Base64.getEncoder().encodeToString(img));
+                                            .replace("$$captchaImage$$", Base64.getEncoder().encodeToString(img));
+        response.setContentType("text/html");
         response.getOutputStream().print(resultCaptcha);
         response.getOutputStream().flush();
     }
