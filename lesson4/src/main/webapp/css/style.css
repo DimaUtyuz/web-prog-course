@@ -7,6 +7,7 @@
     --boder: 1px solid var(--border-color);
     --border-radius: 6px;
     --caption-color: #3B5998;
+    --info-color: #888888;
 }
 
 html {
@@ -56,6 +57,10 @@ header nav ul li a {
     color: black;
     font-family: Arial, sans-serif;
     margin-right: 1rem;
+}
+
+header nav ul li .join {
+    border-bottom: 3px #3B5998 solid;
 }
 
 .middle {

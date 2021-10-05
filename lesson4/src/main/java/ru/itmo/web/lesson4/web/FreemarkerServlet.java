@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,18 +42,22 @@ public class FreemarkerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding(UTF_8);
         response.setCharacterEncoding(UTF_8);
+        response.setContentType("text/html");
 
         Template template;
         try {
-            template = freemarkerConfiguration.getTemplate(URLDecoder.decode(request.getRequestURI(), UTF_8) + ".ftlh");
+            String uri = request.getRequestURI();
+            if ("/".equals(uri)) {
+                uri += "index";
+            }
+            template = freemarkerConfiguration.getTemplate(URLDecoder.decode(uri, UTF_8) + ".ftlh");
         } catch (TemplateNotFoundException ignored) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
+            template = freemarkerConfiguration.getTemplate("error.ftlh");
         }
 
         Map<String, Object> data = getData(request);
 
-        response.setContentType("text/html");
         try {
             template.process(data, response.getWriter());
         } catch (TemplateException e) {
@@ -65,7 +71,22 @@ public class FreemarkerServlet extends HttpServlet {
 
         for (Map.Entry<String, String[]> e : request.getParameterMap().entrySet()) {
             if (e.getValue() != null && e.getValue().length == 1) {
-                data.put(e.getKey(), e.getValue()[0]);
+                String key = e.getKey();
+                String value = e.getValue()[0];
+                if (key.endsWith("_id")) {
+                    long number;
+                    try {
+                        number = Long.parseLong(value);
+                    } catch (NumberFormatException ignored) {
+                        number = 0L;
+                    }
+                    if (number < 0) {
+                        number = 0L;
+                    }
+                    data.put(key, number);
+                } else {
+                    data.put(key, value);
+                }
             }
         }
 

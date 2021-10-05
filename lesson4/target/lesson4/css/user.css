@@ -1,0 +1,28 @@
+.middle main .user-page .user {
+    border: var(--boder);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+}
+
+.middle main .user-page .user .info .name {
+    padding: var(--border-radius);
+    padding-bottom: 0;
+    font-size: 1.7rem;
+    display: block;
+}
+
+.middle main .user-page .user img {
+    margin: var(--border-radius);
+}
+
+.middle main .user-page .links {
+    font-size: 1.7rem;
+    color: grey;
+}
+
+.middle main .user-page .links a {
+    color: blue;
+    text-decoration: none;
+}
+

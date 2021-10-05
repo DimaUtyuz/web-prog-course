@@ -1,0 +1,21 @@
+.middle main .articles ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.middle main article .title {
+    color: var(--caption-color);
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.middle main article .information {
+    color: var(--info-color);
+    padding: 0.25rem 0;
+}
+
+.middle main article .body {
+    border-left: 4px solid var(--info-color);
+    padding-left: 1rem;
+    margin: 1rem 0 2rem;
+}

@@ -1,0 +1,17 @@
+.userlink {
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.user-red {
+    color: red;
+}
+
+.user-green {
+    color: green;
+}
+
+.user-blue {
+    color: blue;
+}
