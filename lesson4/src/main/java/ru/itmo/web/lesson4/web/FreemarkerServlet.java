@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,12 +46,14 @@ public class FreemarkerServlet extends HttpServlet {
         try {
             String uri = request.getRequestURI();
             if ("/".equals(uri)) {
-                uri += "index";
+                response.sendRedirect("index");
+                return;
             }
             template = freemarkerConfiguration.getTemplate(URLDecoder.decode(uri, UTF_8) + ".ftlh");
         } catch (TemplateNotFoundException ignored) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            template = freemarkerConfiguration.getTemplate("error.ftlh");
+            response.sendRedirect("error");
+            return;
         }
 
         Map<String, Object> data = getData(request);
@@ -80,16 +80,12 @@ public class FreemarkerServlet extends HttpServlet {
                     } catch (NumberFormatException ignored) {
                         number = 0L;
                     }
-                    if (number < 0) {
-                        number = 0L;
-                    }
                     data.put(key, number);
                 } else {
                     data.put(key, value);
                 }
             }
         }
-
         DataUtil.addData(request, data);
         return data;
     }
