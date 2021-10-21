@@ -10,15 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FrontServlet extends HttpServlet {
@@ -90,17 +88,13 @@ public class FrontServlet extends HttpServlet {
         Class<?> pageClass;
         try {
             pageClass = Class.forName(route.getClassName());
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException ignored) {
             throw new NotFoundException();
         }
 
         Method method = null;
         for (Class<?> clazz = pageClass; method == null && clazz != null; clazz = clazz.getSuperclass()) {
-            try {
-                method = clazz.getDeclaredMethod(route.getAction(), HttpServletRequest.class, Map.class);
-            } catch (NoSuchMethodException ignored) {
-                // No operations.
-            }
+            method = findMethod(clazz, route.getAction());
         }
 
         if (method == null) {
@@ -116,9 +110,18 @@ public class FrontServlet extends HttpServlet {
         }
 
         Map<String, Object> view = new HashMap<>();
+        Object[] args = new Object[method.getParameterTypes().length];
+        for (int i = 0; i < args.length; i++) {
+            if (Map.class.equals(method.getParameterTypes()[i])) {
+                args[i] = view;
+            } else if (HttpServletRequest.class.equals(method.getParameterTypes()[i])) {
+                args[i] = request;
+            }
+        }
+
         method.setAccessible(true);
         try {
-            method.invoke(page, request, view);
+            method.invoke(page, args);
         } catch (IllegalAccessException e) {
             throw new ServletException("Can't invoke action method [pageClass="
                     + pageClass + ", method=" + method + "]");
@@ -134,7 +137,7 @@ public class FrontServlet extends HttpServlet {
             }
         }
 
-        Template template = newTemplate(pageClass.getSimpleName() + ".ftlh");
+        Template template = newTemplate(pageClass.getSimpleName() + ".ftlh", setLang(request));
         response.setContentType("text/html");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         try {
@@ -147,12 +150,32 @@ public class FrontServlet extends HttpServlet {
         }
     }
 
-    private Template newTemplate(String templateName) throws ServletException {
+    private String setLang(HttpServletRequest request) {
+        String lang = request.getParameter("lang");
+        HttpSession session = request.getSession();
+        if (!Objects.isNull(lang) && lang.matches("^[a-z][a-z]$")) {
+            session.setAttribute("lang", lang);
+        } else if (Objects.isNull(session.getAttribute("lang"))) {
+            session.setAttribute("lang", "en");
+        }
+        return (String) request.getSession().getAttribute("lang");
+    }
+
+    private Method findMethod(Class<?> clazz, String methodName) {
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    private Template newTemplate(String templateName, String lang) throws ServletException {
         Template template = null;
 
         if (sourceConfiguration != null) {
             try {
-                template = sourceConfiguration.getTemplate(templateName);
+                template = sourceConfiguration.getTemplate(templateName, new Locale(lang));
             } catch (TemplateNotFoundException ignored) {
                 // No operations.
             } catch (IOException e) {

@@ -2,6 +2,5 @@
 <#import "./common.ftlh" as c>
 
 <@c.page>
-    Hello, ${name}!
-    I'm english page!
+    Привет, ${name}!
 </@c.page>
