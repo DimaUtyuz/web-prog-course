@@ -24,8 +24,8 @@
             Move: <#if state.crossesMove>X<#else>O</#if>
         <#elseif phase=="WON_X">
             Game over. Xs won!
-        <#elseif phase=="WON_O">
-            Game over. Os won!
+        <#elseif phase=="WON_0">
+            Game over. 0s won!
         <#elseif phase=="DRAW">
             Game over. Draw!
         </#if>

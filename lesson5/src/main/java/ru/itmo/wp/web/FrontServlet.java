@@ -85,6 +85,8 @@ public class FrontServlet extends HttpServlet {
 
     private void process(Route route, HttpServletRequest request, HttpServletResponse response)
             throws NotFoundException, ServletException, IOException {
+        setLang(request);
+
         Class<?> pageClass;
         try {
             pageClass = Class.forName(route.getClassName());
@@ -137,7 +139,7 @@ public class FrontServlet extends HttpServlet {
             }
         }
 
-        Template template = newTemplate(pageClass.getSimpleName() + ".ftlh", setLang(request));
+        Template template = newTemplate(pageClass.getSimpleName() + ".ftlh");
         response.setContentType("text/html");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         try {
@@ -150,15 +152,19 @@ public class FrontServlet extends HttpServlet {
         }
     }
 
-    private String setLang(HttpServletRequest request) {
+    private void setLang(HttpServletRequest request) {
         String lang = request.getParameter("lang");
         HttpSession session = request.getSession();
         if (!Objects.isNull(lang) && lang.matches("^[a-z][a-z]$")) {
             session.setAttribute("lang", lang);
-        } else if (Objects.isNull(session.getAttribute("lang"))) {
-            session.setAttribute("lang", "en");
+        } else {
+            lang = (String) session.getAttribute("lang");
+            if (Objects.isNull(lang)) {
+                lang = "";
+            }
         }
-        return (String) request.getSession().getAttribute("lang");
+        sourceConfiguration.setLocale(new Locale(lang));
+        targetConfiguration.setLocale(new Locale(lang));
     }
 
     private Method findMethod(Class<?> clazz, String methodName) {
@@ -170,12 +176,12 @@ public class FrontServlet extends HttpServlet {
         return null;
     }
 
-    private Template newTemplate(String templateName, String lang) throws ServletException {
+    private Template newTemplate(String templateName) throws ServletException {
         Template template = null;
 
         if (sourceConfiguration != null) {
             try {
-                template = sourceConfiguration.getTemplate(templateName, new Locale(lang));
+                template = sourceConfiguration.getTemplate(templateName);
             } catch (TemplateNotFoundException ignored) {
                 // No operations.
             } catch (IOException e) {

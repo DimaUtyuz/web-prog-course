@@ -9,9 +9,9 @@ public class TicTacToePage {
     private void onMove(HttpServletRequest request, Map<String, Object> view) {
         State state = (State) request.getSession().getAttribute("state");
         for (String parameter : request.getParameterMap().keySet()) {
-            if (parameter.startsWith("cell_")) {
-                int row = Integer.parseInt(String.valueOf(parameter.charAt(5)));
-                int col = Integer.parseInt(String.valueOf(parameter.charAt(6)));
+            if (parameter.startsWith("cell_") && parameter.length() == 7) {
+                int row = parameter.charAt(5) - '0';
+                int col = parameter.charAt(6) - '0';
                 state.onMove(row, col);
                 break;
             }
@@ -48,10 +48,12 @@ public class TicTacToePage {
         }
 
         public void onMove(int row, int col) {
-            cells[row][col] = getTurn();
-            empty--;
-            checkWin(col, row);
-            crossesMove ^= true;
+            if (0 <= row && row < size && 0 <= col && col < size && Objects.isNull(cells[row][col])) {
+                cells[row][col] = getTurn();
+                empty--;
+                checkWin(col, row);
+                crossesMove ^= true;
+            }
         }
 
         private void checkWin(int x, int y) {
