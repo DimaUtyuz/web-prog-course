@@ -9,12 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
-public class RegisterPage {
+public class RegisterPage extends  BasePage {
     private final UserService userService = new UserService();
-
-    private void action(HttpServletRequest request, Map<String, Object> view) {
-        // No operations.
-    }
 
     private void register(HttpServletRequest request, Map<String, Object> view) throws ValidationException {
         User user = new User();

@@ -6,8 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
-public class LogoutPage {
-    private void action(HttpServletRequest request, Map<String, Object> view) {
+public class LogoutPage extends BasePage {
+    @Override
+    protected void action(HttpServletRequest request, Map<String, Object> view) {
+        userService.logout(getUser());
         request.getSession().removeAttribute("user");
 
         request.getSession().setAttribute("message", "Good bye. Hope to see you soon!");

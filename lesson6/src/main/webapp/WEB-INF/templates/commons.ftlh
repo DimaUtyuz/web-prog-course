@@ -1,5 +1,6 @@
 <#-- @ftlvariable name="user" type="ru.itmo.wp.model.domain.User" -->
 <#-- @ftlvariable name="message" type="java.lang.String" -->
+<#-- @ftlvariable name="userCount" type="java.lang.Integer" -->
 <#macro page>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,6 +60,7 @@
     </main>
 </div>
 <footer>
+    <p> Total number of users ${userCount!} </p>
     <a href="/index">Codeforces</a> &copy; 2020 by Mike Mirzayanov
 </footer>
 </body>

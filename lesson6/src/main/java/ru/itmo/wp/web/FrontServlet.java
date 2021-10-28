@@ -6,6 +6,8 @@ import ru.itmo.wp.model.domain.User;
 import ru.itmo.wp.model.exception.ValidationException;
 import ru.itmo.wp.web.exception.NotFoundException;
 import ru.itmo.wp.web.exception.RedirectException;
+import ru.itmo.wp.web.page.BasePage;
+import ru.itmo.wp.web.page.EnterPage;
 import ru.itmo.wp.web.page.IndexPage;
 import ru.itmo.wp.web.page.NotFoundPage;
 
@@ -123,15 +125,27 @@ public class FrontServlet extends HttpServlet {
         }
 
         Method method = null;
-        for (Class<?> clazz = pageClass; method == null && clazz != null; clazz = clazz.getSuperclass()) {
+        Method before = null;
+        Method after = null;
+        for (Class<?> clazz = pageClass; (method == null || before == null || after == null) && clazz != null; clazz = clazz.getSuperclass()) {
             try {
-                method = pageClass.getDeclaredMethod(route.getAction(), HttpServletRequest.class, Map.class);
+                method = clazz.getDeclaredMethod(route.getAction(), HttpServletRequest.class, Map.class);
+            } catch (NoSuchMethodException ignored) {
+                // No operations.
+            }
+            try {
+                before = clazz.getDeclaredMethod("before", HttpServletRequest.class, Map.class);
+            } catch (NoSuchMethodException ignored) {
+                // No operations.
+            }
+            try {
+                after = clazz.getDeclaredMethod("after", HttpServletRequest.class, Map.class);
             } catch (NoSuchMethodException ignored) {
                 // No operations.
             }
         }
 
-        if (method == null) {
+        if (method == null || before == null || after == null) {
             throw new NotFoundException();
         }
 
@@ -144,11 +158,16 @@ public class FrontServlet extends HttpServlet {
         }
 
         Map<String, Object> view = new HashMap<>();
-        putUser(request, view);
 
         try {
+            before.setAccessible(true);
+            before.invoke(page, request, view);
+
             method.setAccessible(true);
             method.invoke(page, request, view);
+
+            after.setAccessible(true);
+            after.invoke(page, request, view);
         } catch (IllegalAccessException e) {
             throw new ServletException("Unable to run action [pageClass=" + pageClass + ", method=" + method + "].", e);
         } catch (InvocationTargetException e) {
@@ -181,13 +200,6 @@ public class FrontServlet extends HttpServlet {
             template.process(view, response.getWriter());
         } catch (TemplateException e) {
             throw new ServletException("Can't render template [pageClass=" + pageClass + ", method=" + method + "].", e);
-        }
-    }
-
-    private void putUser(HttpServletRequest request, Map<String, Object> view) {
-        User user = (User) request.getSession().getAttribute("user");
-        if (user != null) {
-            view.put("user", user);
         }
     }
 

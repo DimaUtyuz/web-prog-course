@@ -2,9 +2,12 @@ package ru.itmo.wp.model.service;
 
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
+import ru.itmo.wp.model.domain.Event;
 import ru.itmo.wp.model.domain.User;
 import ru.itmo.wp.model.exception.ValidationException;
+import ru.itmo.wp.model.repository.EventRepository;
 import ru.itmo.wp.model.repository.UserRepository;
+import ru.itmo.wp.model.repository.impl.EventRepositoryImpl;
 import ru.itmo.wp.model.repository.impl.UserRepositoryImpl;
 
 import java.nio.charset.StandardCharsets;
@@ -15,6 +18,7 @@ import java.util.Map;
 /** @noinspection UnstableApiUsage*/
 public class UserService {
     private final UserRepository userRepository = new UserRepositoryImpl();
+    private final EventRepository eventRepository = new EventRepositoryImpl();
     private static final String PASSWORD_SALT = "177d4b5f2e4f4edafa7404533973c04c513ac619";
 
     public void validateRegistration(User user, String password, String passwordConfirmation) throws ValidationException {
@@ -88,5 +92,23 @@ public class UserService {
 
     private String setLoginOrEmail(String loginOrEmail) {
         return loginOrEmail.contains("@") ? "email" : "login";
+    }
+
+    public long findCount() {
+        return userRepository.findCount();
+    }
+
+    public void enter(User user) {
+        Event event = new Event();
+        event.setUserId(user.getId());
+        event.setType(Event.TYPES.ENTER);
+        eventRepository.save(event);
+    }
+
+    public void logout(User user) {
+        Event event = new Event();
+        event.setUserId(user.getId());
+        event.setType(Event.TYPES.LOGOUT);
+        eventRepository.save(event);
     }
 }

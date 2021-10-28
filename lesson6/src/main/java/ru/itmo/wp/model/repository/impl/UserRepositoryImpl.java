@@ -57,21 +57,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findByLoginAndPasswordSha(String login, String passwordSha) {
-        try (Connection connection = DATA_SOURCE.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM User WHERE login=? AND passwordSha=?")) {
-                statement.setString(1, login);
-                statement.setString(2, passwordSha);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    return toUser(statement.getMetaData(), resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RepositoryException("Can't find User.", e);
-        }
-    }
-
-    @Override
     public User findBy(Map<String, String> parameters) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
             String[] keys = parameters.keySet().toArray(new String[0]);
@@ -160,6 +145,20 @@ public class UserRepositoryImpl implements UserRepository {
             }
         } catch (SQLException e) {
             throw new RepositoryException("Can't save User.", e);
+        }
+    }
+
+    @Override
+    public long findCount() {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM `User`")) {
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                    return resultSet.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't find User.", e);
         }
     }
 }
