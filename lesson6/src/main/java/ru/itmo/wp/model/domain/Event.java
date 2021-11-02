@@ -6,10 +6,10 @@ import java.util.Date;
 public class Event implements Serializable {
     private long id;
     private long userId;
-    private TYPES type;
+    private Types type;
     private Date creationTime;
 
-    public enum TYPES {
+    public enum Types {
         ENTER,
         LOGOUT
     }
@@ -30,11 +30,11 @@ public class Event implements Serializable {
         this.userId = userId;
     }
 
-    public TYPES getType() {
+    public Types getType() {
         return type;
     }
 
-    public void setType(TYPES type) {
+    public void setType(Types type) {
         this.type = type;
     }
 

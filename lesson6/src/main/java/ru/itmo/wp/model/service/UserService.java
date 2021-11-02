@@ -2,23 +2,17 @@ package ru.itmo.wp.model.service;
 
 import com.google.common.base.Strings;
 import com.google.common.hash.Hashing;
-import ru.itmo.wp.model.domain.Event;
 import ru.itmo.wp.model.domain.User;
 import ru.itmo.wp.model.exception.ValidationException;
-import ru.itmo.wp.model.repository.EventRepository;
 import ru.itmo.wp.model.repository.UserRepository;
-import ru.itmo.wp.model.repository.impl.EventRepositoryImpl;
 import ru.itmo.wp.model.repository.impl.UserRepositoryImpl;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /** @noinspection UnstableApiUsage*/
 public class UserService {
     private final UserRepository userRepository = new UserRepositoryImpl();
-    private final EventRepository eventRepository = new EventRepositoryImpl();
     private static final String PASSWORD_SALT = "177d4b5f2e4f4edafa7404533973c04c513ac619";
 
     public void validateRegistration(User user, String password, String passwordConfirmation) throws ValidationException {
@@ -38,7 +32,7 @@ public class UserService {
         if (Strings.isNullOrEmpty(user.getEmail())) {
             throw new ValidationException("Email is required");
         }
-        if (!user.getEmail().matches("^[^@]+@[^@]+")) {
+        if (!user.getEmail().matches("^[^@]+@[^@]+$")) {
             throw new ValidationException("Email should contain one '@' and other characters");
         }
         if (userRepository.findByEmail(user.getEmail()) != null) {
@@ -72,43 +66,25 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User find(long id) {
+        return userRepository.find(id);
+    }
+
     public void validateEnter(String loginOrEmail, String password) throws ValidationException {
-        String nameLoginOrEmail = setLoginOrEmail(loginOrEmail);
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(nameLoginOrEmail, loginOrEmail);
-        parameters.put("passwordSha", getPasswordSha(password));
-        User user = userRepository.findBy(parameters);
+        User user = findByLoginOrEmailAndPassword(loginOrEmail, password);
         if (user == null) {
-            throw new ValidationException("Invalid " + nameLoginOrEmail + " or password");
+            throw new ValidationException("Invalid login/email or password");
         }
     }
 
     public User findByLoginOrEmailAndPassword(String loginOrEmail, String password) {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(setLoginOrEmail(loginOrEmail), loginOrEmail);
-        parameters.put("passwordSha", getPasswordSha(password));
-        return userRepository.findBy(parameters);
-    }
-
-    private String setLoginOrEmail(String loginOrEmail) {
-        return loginOrEmail.contains("@") ? "email" : "login";
+        if (loginOrEmail.contains("@")) {
+            return userRepository.findBy("email", loginOrEmail, "passwordSha", getPasswordSha(password));
+        }
+        return userRepository.findBy("login", loginOrEmail, "passwordSha", getPasswordSha(password));
     }
 
     public long findCount() {
         return userRepository.findCount();
-    }
-
-    public void enter(User user) {
-        Event event = new Event();
-        event.setUserId(user.getId());
-        event.setType(Event.TYPES.ENTER);
-        eventRepository.save(event);
-    }
-
-    public void logout(User user) {
-        Event event = new Event();
-        event.setUserId(user.getId());
-        event.setType(Event.TYPES.LOGOUT);
-        eventRepository.save(event);
     }
 }

@@ -7,8 +7,6 @@ import java.util.Map;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class UsersPage extends BasePage {
-    private final UserService userService = new UserService();
-
     @Override
     protected void action(HttpServletRequest request, Map<String, Object> view) {
         view.put("users", userService.findAll());

@@ -7,8 +7,4 @@ import java.util.Map;
 
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class IndexPage extends BasePage {
-    @Override
-    protected void action(HttpServletRequest request, Map<String, Object> view) {
-        putMessage(view);
-    }
 }

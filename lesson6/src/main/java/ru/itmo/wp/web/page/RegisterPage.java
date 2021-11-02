@@ -22,7 +22,7 @@ public class RegisterPage extends  BasePage {
         userService.validateRegistration(user, password, passwordConfirmation);
         userService.register(user, password);
 
-        request.getSession().setAttribute("message", "You are successfully registered!");
+        setMessage("You are successfully registered!");
         throw new RedirectException("/index");
     }
 }

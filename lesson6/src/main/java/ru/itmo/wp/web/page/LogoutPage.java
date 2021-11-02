@@ -9,10 +9,9 @@ import java.util.Map;
 public class LogoutPage extends BasePage {
     @Override
     protected void action(HttpServletRequest request, Map<String, Object> view) {
-        userService.logout(getUser());
-        request.getSession().removeAttribute("user");
-
-        request.getSession().setAttribute("message", "Good bye. Hope to see you soon!");
+        eventService.logout(getUser());
+        setUser(null);
+        setMessage("Good bye. Hope to see you soon!");
         throw new RedirectException("/index");
     }
 }
