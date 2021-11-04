@@ -8,6 +8,7 @@
     --datatable-dark-cell-color: #f8f8f8;
     --message-border-color: #1E88E5;
     --message-background-color: #E3F2FD;
+    --info-color: #888888;
     color: var(--black-color);
     font-family: Verdana, sans-serif;
     font-size: 16px;

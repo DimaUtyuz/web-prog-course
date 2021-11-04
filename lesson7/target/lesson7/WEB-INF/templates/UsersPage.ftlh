@@ -32,36 +32,23 @@
             const $noData = $(".users .noData");
             $noData.find("td").text("Loading...");
 
-            $.ajax({
-                dataType: "json",
-                data: {
-                    action: "findAll"
-                },
-                success: function(response) {
-                    response["users"].forEach(function(user) {
-                        $noData.hide();
-                        const $tr = $($(".users template").prop("content")).clone();
-                        $tr.find(".user-id").text(user["id"]);
-                        $tr.find(".user_login").text(user["login"]);
-                        $tr.find("tr").attr("data-userId", user["id"]);
-                        $(".users tbody").append($tr);
-                    });
-                    $(".users tr").click(function() {
-                        $.ajax({
-                            dataType: "json",
-                            data: {
-                                action: "findUser",
-                                userId: $(this).attr("data-userId")
-                            },
-                            success: function (response) {
-                                notify(response["user"].creationTime);
-                            },
-                            type: "POST"
-                        })
-                    });
-                },
-                type: "POST"
-            });
+            const success = function(response) {
+                response["users"].forEach(function(user) {
+                    $noData.hide();
+                    const $tr = $($(".users template").prop("content")).clone();
+                    $tr.find(".user-id").text(user["id"]);
+                    $tr.find(".user_login").text(user["login"]);
+                    $tr.find("tr").attr("data-userId", user["id"]);
+                    $(".users tbody").append($tr);
+                });
+                $(".users tr").click(function() {
+                    const success = function (response) {
+                        notify(response["user"].creationTime);
+                    }
+                    ajax("findUser", {userId: $(this).attr("data-userId")}, this, success)
+                });
+            }
+            ajax("findAll", {}, this, success);
         })
     </script>
 </@c.page>

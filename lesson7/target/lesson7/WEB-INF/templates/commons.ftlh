@@ -10,6 +10,8 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/form.css">
     <link rel="stylesheet" type="text/css" href="css/datatable.css">
+    <link rel="stylesheet" type="text/css" href="css/articleForm.css">
+    <link rel="stylesheet" type="text/css" href="css/articles.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/notify.min.js"></script>
     <script src="/js/app.js"></script>
@@ -36,6 +38,9 @@
         <ul>
             <li><a href="/index">Home</a></li>
             <li><a href="/users">Users</a></li>
+            <#if user??>
+                <li><a href="/article">Article</a></li>
+            </#if>
         </ul>
     </nav>
 </header>
@@ -55,7 +60,18 @@
         </section>
     </aside>
     <main>
-        <#nested/>
+        <div class="articles">
+            <ul>
+                <template>
+                    <li>
+                        <article>
+                            <div class="title"></div>
+                            <div class="text"></div>
+                        </article>
+                    </li>
+                </template>
+            </ul>
+        </div>
     </main>
 </div>
 <footer>
@@ -66,6 +82,18 @@
         <#if message??>
             notify("${message?js_string}");
         </#if>
+    })
+
+    $(function () {
+        const success = function(response) {
+            response["articles"].forEach(function(article) {
+                const $li = $($(".articles template").prop("content")).clone();
+                $li.find(".title").text(article["title"]);
+                $li.find(".text").text(article["text"]);
+                $(".articles ul").append($li);
+            });
+        }
+        ajax("findArticles", {}, this, success);
     })
 </script>
 </body>
