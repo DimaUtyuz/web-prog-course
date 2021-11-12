@@ -21,25 +21,27 @@ public class TalksPage extends BasePage {
     }
 
     protected void send(HttpServletRequest request, Map<String, Object> view) throws ValidationException {
-        putUsersAndTalks(view);
-        Talk talk = new Talk();
         try {
-            talk.setSourceUserId(getUser().getId());
-        } catch (NullPointerException ignored) {
-            throw new ValidationException("Invalid source user login");
-        }
-        try {
-            talk.setTargetUserId(Long.parseLong(request.getParameter("targetUserId")));
-        } catch (NullPointerException ignored) {
-            throw new ValidationException("Invalid target user login");
-        }
-        talk.setText(request.getParameter("text"));
+            Talk talk = new Talk();
+            try {
+                talk.setSourceUserId(getUser().getId());
+            } catch (NullPointerException ignored) {
+                throw new ValidationException("Invalid source user login");
+            }
+            try {
+                talk.setTargetUserId(Long.parseLong(request.getParameter("targetUserId")));
+            } catch (NullPointerException | NumberFormatException ignored) {
+                throw new ValidationException("Invalid target user login");
+            }
+            talk.setText(request.getParameter("text"));
 
-        talkService.validateTalk(talk);
-        talkService.send(talk);
+            talkService.validateTalk(talk);
+            talkService.save(talk);
 
-        setMessage("The message has been sent");
-        view.put("talks", talkService.findByUserId(getUser().getId()));
+            setMessage("The message has been sent");
+        } finally {
+            putUsersAndTalks(view);
+        }
     }
 
     private void putUsersAndTalks(Map<String, Object> view) {

@@ -13,10 +13,10 @@ window.ajax = function ajax(action, data, context, success=function (){}) {
         dataType: "json",
         data,
         success: function (response) {
-            success(response);
             if (response["error"]) {
                 $(context).find(".error").text(response["error"]);
             } else {
+                success(response);
                 if (response["redirect"]) {
                     location.href = response["redirect"];
                 }

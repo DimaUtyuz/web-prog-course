@@ -1,14 +1,14 @@
 package ru.itmo.wp.model.repository.impl;
 
-import ru.itmo.wp.model.database.DatabaseUtils;
 import ru.itmo.wp.model.domain.Article;
+import ru.itmo.wp.model.exception.RepositoryException;
 import ru.itmo.wp.model.repository.ArticleRepository;
 
-import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArticleRepositoryImpl extends BasicRepositoryImpl<Article> implements ArticleRepository {
-    private final DataSource DATA_SOURCE = DatabaseUtils.getDataSource();
 
     public ArticleRepositoryImpl() {
         super("Article");
@@ -37,6 +37,9 @@ public class ArticleRepositoryImpl extends BasicRepositoryImpl<Article> implemen
                 case "creationTime":
                     article.setCreationTime(resultSet.getTimestamp(i));
                     break;
+                case "hidden":
+                    article.setHidden(resultSet.getBoolean(i));
+                    break;
                 default:
                     // No operations.
             }
@@ -52,6 +55,43 @@ public class ArticleRepositoryImpl extends BasicRepositoryImpl<Article> implemen
 
     @Override
     public void save(Article article) {
-        save("userId", article.getUserId(), "title", article.getTitle(), "text", article.getText(), "creationTime", null);
+        save("userId", article.getUserId(),
+                "title", article.getTitle(),
+                "text", article.getText(),
+                "creationTime", null,
+                "hidden", article.getHidden());
+    }
+
+    public List<Article> findByUserId(long userId) {
+        List<Article> articles = new ArrayList<>();
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM Article WHERE userId=? ORDER BY creationTime DESC")) {
+                statement.setLong(1, userId);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    Article article;
+                    while ((article = toCreate(statement.getMetaData(), resultSet)) != null) {
+                        articles.add(article);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't find Articles.", e);
+        }
+        return articles;
+    }
+
+    @Override
+    public void setHidden(long id, boolean hidden) {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE Article SET hidden=? WHERE id=?")) {
+                statement.setBoolean(1, hidden);
+                statement.setLong(2, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    resultSet.next();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't update Article.", e);
+        }
     }
 }

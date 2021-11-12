@@ -9,6 +9,7 @@ public class Article implements Serializable {
     private String title;
     private String text;
     private Date creationTime;
+    private boolean hidden;
 
     public long getId() {
         return id;
@@ -48,5 +49,13 @@ public class Article implements Serializable {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public boolean getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

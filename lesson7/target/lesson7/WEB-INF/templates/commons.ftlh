@@ -40,6 +40,7 @@
             <li><a href="/users">Users</a></li>
             <#if user??>
                 <li><a href="/article">Article</a></li>
+                <li><a href="/myArticles">MyArticles</a></li>
             </#if>
         </ul>
     </nav>
@@ -60,18 +61,7 @@
         </section>
     </aside>
     <main>
-        <div class="articles">
-            <ul>
-                <template>
-                    <li>
-                        <article>
-                            <div class="title"></div>
-                            <div class="text"></div>
-                        </article>
-                    </li>
-                </template>
-            </ul>
-        </div>
+        <#nested/>
     </main>
 </div>
 <footer>
@@ -82,18 +72,6 @@
         <#if message??>
             notify("${message?js_string}");
         </#if>
-    })
-
-    $(function () {
-        const success = function(response) {
-            response["articles"].forEach(function(article) {
-                const $li = $($(".articles template").prop("content")).clone();
-                $li.find(".title").text(article["title"]);
-                $li.find(".text").text(article["text"]);
-                $(".articles ul").append($li);
-            });
-        }
-        ajax("findArticles", {}, this, success);
     })
 </script>
 </body>

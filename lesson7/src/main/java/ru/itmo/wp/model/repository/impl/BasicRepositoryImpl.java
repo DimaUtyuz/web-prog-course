@@ -74,7 +74,9 @@ public abstract class BasicRepositoryImpl<T> {
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 int ind = 1;
                 for (int i = 0; i < parameters.length; i+=2) {
-                    if (parameters[i].toString().toLowerCase().endsWith("id")) {
+                    if (parameters[i].toString().equals("hidden")) {
+                        statement.setBoolean(ind++, (Boolean) parameters[i + 1]);
+                    } else if (parameters[i].toString().toLowerCase().endsWith("id")) {
                         statement.setLong(ind++, (Long) parameters[i + 1]);
                     } else if (!parameters[i].toString().equals("creationTime")){
                         statement.setString(ind++, (String) parameters[i + 1]);

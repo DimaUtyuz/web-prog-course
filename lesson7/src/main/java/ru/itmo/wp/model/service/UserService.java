@@ -8,7 +8,9 @@ import ru.itmo.wp.model.repository.UserRepository;
 import ru.itmo.wp.model.repository.impl.UserRepositoryImpl;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** @noinspection UnstableApiUsage*/
 public class UserService {
@@ -62,5 +64,9 @@ public class UserService {
             throw new ValidationException("Invalid login or password");
         }
         return user;
+    }
+
+    public void setAdmin(long id, boolean admin) {
+        userRepository.setAdmin(id, admin);
     }
 }

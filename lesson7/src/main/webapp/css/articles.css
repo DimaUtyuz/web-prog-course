@@ -9,6 +9,11 @@
     font-size: 1.5rem;
 }
 
+.middle main article .information {
+    color: var(--info-color);
+    padding: 0.25rem 0;
+}
+
 .middle main article .text {
     border-left: 4px solid var(--info-color);
     padding-left: 1rem;

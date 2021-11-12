@@ -7,6 +7,7 @@
                 <li>
                     <article>
                         <div class="title"></div>
+                        <div class="information"></div>
                         <div class="text"></div>
                     </article>
                 </li>
@@ -16,11 +17,18 @@
     <script>
         $(function () {
             const success = function(response) {
+                let users = new Map();
+                response["users"].forEach(function (user) {
+                    users.set(user["id"], user["login"]);
+                });
                 response["articles"].forEach(function(article) {
-                    const $li = $($(".articles template").prop("content")).clone();
-                    $li.find(".title").text(article["title"]);
-                    $li.find(".text").text(article["text"]);
-                    $(".articles ul").append($li);
+                    if (!article["hidden"]) {
+                        const $li = $($(".articles template").prop("content")).clone();
+                        $li.find(".title").text(article["title"]);
+                        $li.find(".information").text("By " + users.get(article["userId"]));
+                        $li.find(".text").text(article["text"]);
+                        $(".articles ul").append($li);
+                    }
                 });
             }
             ajax("findArticles", {}, this, success);

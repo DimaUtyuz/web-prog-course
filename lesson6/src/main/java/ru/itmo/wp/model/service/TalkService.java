@@ -18,7 +18,7 @@ public class TalkService {
         return talkRepository.findByUserId(userId);
     }
 
-    public void send(Talk talk) { talkRepository.save(talk); }
+    public void save(Talk talk) { talkRepository.save(talk); }
 
     public void validateTalk(Talk talk) throws ValidationException {
         if (userRepository.find(talk.getSourceUserId()) == null) {
@@ -27,7 +27,7 @@ public class TalkService {
         if (userRepository.find(talk.getTargetUserId()) == null) {
             throw new ValidationException("Invalid target user login");
         }
-        if (Strings.isNullOrEmpty(talk.getText())) {
+        if (talk.getText() == null || talk.getText().trim().isEmpty()) {
             throw new ValidationException("Message is required");
         }
     }

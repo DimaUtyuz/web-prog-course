@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="users" type="ru.itmo.wp.model.domain.User[]" -->
+<#-- @ftlvariable name="user" type="ru.itmo.wp.model.domain.User" -->
 <#import "commons.ftlh" as c>
 
 <@c.page>
@@ -9,37 +10,53 @@
             <tr>
                 <th>Id</th>
                 <th>Login</th>
+                <#if user?? && user.admin>
+                    <th>Role</th>
+                    <th>Action</th>
+                </#if>
             </tr>
             </thead>
             <tbody>
-            <template>
+            <template class="tmpl-tr">
                 <tr>
                     <td class="user-id"></td>
-                    <td class="user_login"></td>
+                    <td class="user-login"></td>
+                    <#if user?? && user.admin>
+                        <td class="user-admin"></td>
+                        <td class="user-action">
+                            <button></button>
+                        </td>
+                    </#if>
                 </tr>
             </template>
-            <tr class="noData">
-                <td colspan="3">
-                    No data
-                </td>
-            </tr>
             </tbody>
         </table>
     </div>
 
     <script>
         $(function () {
-            const $noData = $(".users .noData");
-            $noData.find("td").text("Loading...");
-
             const success = function(response) {
                 response["users"].forEach(function(user) {
-                    $noData.hide();
                     const $tr = $($(".users template").prop("content")).clone();
                     $tr.find(".user-id").text(user["id"]);
-                    $tr.find(".user_login").text(user["login"]);
+                    $tr.find(".user-login").text(user["login"]);
                     $tr.find("tr").attr("data-userId", user["id"]);
+
+                    const $user_admin = $tr.find(".user-admin")
+                    $user_admin.text(user["admin"] ? "Admin" : "User");
+                    const $user_button = $tr.find(".user-action button");
+                    $user_button.text(user["admin"] ? "Disable" : "Enable");
+
                     $(".users tbody").append($tr);
+                });
+                $(".users button").click(function() {
+                    const context = $(this).parent().parent()
+                    const success = function (response) {
+                        const admin = (context.find(".user-admin").text() === "Admin");
+                        context.find(".user-admin").text(admin ? "User" : "Admin");
+                        context.find("button").text(admin ? "Enable" : "Disable");
+                    }
+                    ajax("swap", {id: context.attr("data-userId")}, this, success)
                 });
                 $(".users tr").click(function() {
                     const success = function (response) {

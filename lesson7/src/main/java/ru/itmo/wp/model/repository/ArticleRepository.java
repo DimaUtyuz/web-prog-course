@@ -8,4 +8,6 @@ public interface ArticleRepository {
     Article find(long id);
     List<Article> findAll();
     void save(Article article);
+    List<Article> findByUserId(long userId);
+    void setHidden(long id, boolean hidden);
 }
