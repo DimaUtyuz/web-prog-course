@@ -7,7 +7,6 @@ import ru.itmo.wp.model.service.ArticleService;
 import ru.itmo.wp.web.exception.RedirectException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Map;
 
 /** @noinspection unused*/
@@ -22,7 +21,7 @@ public class MyArticlesPage {
         view.put("myArticles", articleService.findByUserId(user.getId()));
     }
 
-    private void swap(HttpServletRequest request, Map<String, Object> view) throws ValidationException {
+    private void setHidden(HttpServletRequest request, Map<String, Object> view) throws ValidationException {
         long id;
         try {
             id = Long.parseLong(request.getParameter("id"));
@@ -34,6 +33,16 @@ public class MyArticlesPage {
         if (article == null || user == null || article.getUserId() != user.getId()) {
             throw new ValidationException("Invalid article");
         }
-        articleService.setHidden(article.getId(), !article.getHidden());
+        if (request.getParameter("hidden") == null) {
+            throw new ValidationException("Invalid action with article");
+        }
+        String hidden = request.getParameter("hidden");
+        if ("Hide".equals(hidden)) {
+            articleService.setHidden(article.getId(), true);
+        } else if ("Show".equals(hidden)) {
+            articleService.setHidden(article.getId(), false);
+        } else {
+            throw new ValidationException("Invalid action with article");
+        }
     }
 }

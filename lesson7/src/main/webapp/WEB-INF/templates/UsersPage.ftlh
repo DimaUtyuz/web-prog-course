@@ -50,13 +50,13 @@
                     $(".users tbody").append($tr);
                 });
                 $(".users button").click(function() {
-                    const context = $(this).parent().parent()
+                    const context = $(this).parent().parent();
+                    const admin = context.find("button").text();
                     const success = function (response) {
-                        const admin = (context.find(".user-admin").text() === "Admin");
-                        context.find(".user-admin").text(admin ? "User" : "Admin");
-                        context.find("button").text(admin ? "Enable" : "Disable");
+                        context.find(".user-admin").text(admin === "Disable" ? "User" : "Admin");
+                        context.find("button").text(admin === "Disable" ? "Enable" : "Disable");
                     }
-                    ajax("swap", {id: context.attr("data-userId")}, this, success)
+                    ajax("setAdmin", {id: context.attr("data-userId"), admin}, this, success)
                 });
                 $(".users tr").click(function() {
                     const success = function (response) {

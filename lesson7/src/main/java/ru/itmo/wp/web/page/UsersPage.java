@@ -27,7 +27,7 @@ public class UsersPage {
         view.put("user", userService.find(Long.parseLong(request.getParameter("userId"))));
     }
 
-    private void swap(HttpServletRequest request, Map<String, Object> view) throws ValidationException {
+    private void setAdmin(HttpServletRequest request, Map<String, Object> view) throws ValidationException {
         long id;
         if (request.getParameter("id") == null || view.get("user") == null) {
             throw new ValidationException("Invalid user");
@@ -42,6 +42,16 @@ public class UsersPage {
         if (user == null || curUser == null || !curUser.getAdmin()) {
             throw new ValidationException("Invalid user");
         }
-        userService.setAdmin(user.getId(), !user.getAdmin());
+        if (request.getParameter("admin") == null) {
+            throw new ValidationException("Invalid action with user");
+        }
+        String admin = request.getParameter("admin");
+        if ("Enable".equals(admin)) {
+            userService.setAdmin(user.getId(), true);
+        } else if ("Disable".equals(admin)) {
+            userService.setAdmin(user.getId(), false);
+        }  else {
+            throw new ValidationException("Invalid action with user");
+        }
     }
 }

@@ -33,14 +33,11 @@
     <script>
         $(".articles button").click(function() {
             const context = $(this);
+            const hidden = context.text();
             const success = function (response) {
-                if (context.text() === "Hide") {
-                    context.text("Show");
-                } else {
-                    context.text("Hide");
-                }
+                context.text(hidden === "Hide" ? "Show" : "Hide");
             }
-            ajax("swap", {id: $(this).val()}, this, success)
+            ajax("setHidden", {id: $(this).val(), hidden}, this, success)
         });
     </script>
 </@c.page>

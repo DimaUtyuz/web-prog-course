@@ -105,11 +105,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void save(User user, String passwordSha) {
         try (Connection connection = DATA_SOURCE.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO User (login, passwordSha, creationTime, email, admin) VALUES (?, ?, NOW(), ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO User (login, passwordSha, creationTime, admin) VALUES (?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, user.getLogin());
                 statement.setString(2, passwordSha);
-                statement.setString(3, "example@gmail.com");
-                statement.setBoolean(4, false);
+                statement.setBoolean(3, false);
                 if (statement.executeUpdate() != 1) {
                     throw new RepositoryException("Can't save User.");
                 } else {

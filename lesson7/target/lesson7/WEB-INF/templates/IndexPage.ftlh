@@ -8,7 +8,9 @@
                     <article>
                         <div class="title"></div>
                         <div class="information"></div>
-                        <div class="text"></div>
+                        <div class="text">
+                            <p class="template-indent" style="display: none"></p>
+                        </div>
                     </article>
                 </li>
             </template>

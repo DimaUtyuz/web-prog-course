@@ -31,6 +31,12 @@ public class ArticleService {
         if (article.getText() == null) {
             throw new ValidationException("The text is empty");
         }
+        if (article.getTitle().length() > 255) {
+            throw new ValidationException("The title is too long");
+        }
+        if (article.getText().length() > 255) {
+            throw new ValidationException("The text is too long");
+        }
     }
 
     public void create(Article article) {
