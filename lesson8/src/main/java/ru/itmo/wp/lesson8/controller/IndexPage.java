@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class IndexPage extends Page {
-    @GetMapping({"", "/"})
+    @GetMapping({"", "/", "/index"})
     public String index() {
         return "IndexPage";
     }

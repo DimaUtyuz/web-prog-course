@@ -3,9 +3,11 @@ package ru.itmo.wp.lesson8.service;
 import org.springframework.stereotype.Service;
 import ru.itmo.wp.lesson8.domain.User;
 import ru.itmo.wp.lesson8.form.UserCredentials;
+import ru.itmo.wp.lesson8.form.UserStatus;
 import ru.itmo.wp.lesson8.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -37,5 +39,10 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAllByOrderByIdDesc();
+    }
+
+    public void updateStatus(UserStatus userStatus) {
+        boolean disabled = "Disable".equals(userStatus.getStatus());
+        userRepository.updateDisabled(userStatus.getId(), disabled);
     }
 }

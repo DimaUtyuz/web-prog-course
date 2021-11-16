@@ -1,6 +1,7 @@
 package ru.itmo.wp.lesson8.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -28,6 +29,9 @@ public class User {
     @CreationTimestamp
     private Date creationTime;
 
+    @Value("false")
+    private boolean disabled;
+
     public long getId() {
         return id;
     }
@@ -50,6 +54,14 @@ public class User {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }
 

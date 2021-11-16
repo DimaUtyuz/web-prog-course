@@ -1,0 +1,47 @@
+/* notice-box */
+.notice-box {
+    border: 1px solid var(--border-color);
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
+    width: 100%;
+    margin: 0 auto 2rem;
+}
+
+.notice-box .field {
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+
+.notice-box .field .name {
+    width: 8%;
+    float: left;
+    text-align: right;
+    padding: 0 1%;
+}
+
+.notice-box .field .text-value {
+    width: 85%;
+    height: 20rem;
+    float: left;
+}
+
+.notice-box .field textarea {
+    resize: none;
+    width: 100%;
+    height: 95%;
+}
+
+.notice-box .button-field {
+    margin: 1.5rem 1.5rem 1.5rem 10%;
+}
+
+.notice-box .button-field input {
+    padding: 0.1rem 1.5rem;
+}
+
+.notice-box .error {
+    display: block ruby;
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin-left: 10%;
+}

@@ -1,4 +1,3 @@
-<#-- @ftlvariable name="enterForm" type="ru.itmo.wp.form.UserCredentials" -->
 <#import "/spring.ftl" as spring>
 <#import "commons.ftlh" as c>
 

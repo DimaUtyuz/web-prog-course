@@ -10,16 +10,18 @@
         <link rel="stylesheet" type="text/css" href="<@spring.url '/css/style.css'/>">
         <link rel="stylesheet" type="text/css" href="<@spring.url '/css/form.css'/>">
         <link rel="stylesheet" type="text/css" href="<@spring.url '/css/datatable.css'/>">
+        <link rel="stylesheet" type="text/css" href="<@spring.url '/css/user.css'/>">
+        <link rel="stylesheet" type="text/css" href="<@spring.url '/css/noticeForm.css'/>">
         <script src="<@spring.url '/js/jquery-3.4.1.min.js'/>"></script>
         <script src="<@spring.url '/js/notify.min.js'/>"></script>
         <script src="<@spring.url '/js/app.js'/>"></script>
     </head>
     <body>
     <header>
-        <a href="/"><img src="<@spring.url 'img/logo.png'/>" alt="Codeforces" title="Codeforces"/></a>
+        <a href="/"><img src="<@spring.url '/img/logo.png'/>" alt="Codeforces" title="Codeforces"/></a>
         <div class="languages">
-            <a href="#"><img src="<@spring.url 'img/gb.png'/>" alt="In English" title="In English"/></a>
-            <a href="#"><img src="<@spring.url 'img/ru.png'/>" alt="In Russian" title="In Russian"/></a>
+            <a href="#"><img src="<@spring.url '/img/gb.png'/>" alt="In English" title="In English"/></a>
+            <a href="#"><img src="<@spring.url '/img/ru.png'/>" alt="In Russian" title="In Russian"/></a>
         </div>
         <div class="enter-or-register-box">
             <#if user??>
@@ -36,23 +38,25 @@
             <ul>
                 <li><a href="<@spring.url '/'/>">Home</a></li>
                 <li><a href="<@spring.url '/users/all'/>">Users</a></li>
+                <li><a href="<@spring.url '/notice'/>">Notice</a></li>
             </ul>
         </nav>
     </header>
     <div class="middle">
         <aside>
-            <section>
-                <div class="header">
-                    Pay attention
-                </div>
-                <div class="body">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate ducimus enim facere impedit nobis,
-                    nulla placeat quam suscipit unde voluptatibus.
-                </div>
-                <div class="footer">
-                    <a href="#">View all</a>
-                </div>
-            </section>
+            <#list notices?reverse as nt>
+                <section>
+                    <div class="header">
+                        ${nt.id}
+                    </div>
+                    <div class="body">
+                        ${nt.content}
+                    </div>
+                    <div class="footer">
+                        <a href="#">View all</a>
+                    </div>
+                </section>
+            </#list>
         </aside>
         <main>
             <#nested/>

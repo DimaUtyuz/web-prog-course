@@ -1,0 +1,10 @@
+.middle main .user-page .user {
+    border: var(--boder);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+}
+
+.middle main .user-page .user img {
+    margin: var(--border-radius);
+}
