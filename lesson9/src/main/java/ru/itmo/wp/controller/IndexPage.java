@@ -17,7 +17,7 @@ public class IndexPage extends Page {
     }
 
     @Guest
-    @GetMapping({"", "/"})
+    @GetMapping({"", "/", "/index"})
     public String index(Model model) {
         model.addAttribute("posts", postService.findAll());
         return "IndexPage";

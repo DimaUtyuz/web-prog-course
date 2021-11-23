@@ -1,12 +1,13 @@
 package ru.itmo.wp.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
+import ru.itmo.wp.form.PostCredentials;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.util.*;
 
 /** @noinspection unused*/
 @Entity
@@ -33,6 +34,17 @@ public class Post {
 
     @CreationTimestamp
     private Date creationTime;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OrderBy("creationTime desc")
+    private List<Comment> comments;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags;
 
     public long getId() {
         return id;
@@ -72,5 +84,30 @@ public class Post {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {
+        comment.setPost(this);
+        getComments().add(comment);
+    }
+
+    public void addTag(Tag tag) {
+        getTags().add(tag);
     }
 }
