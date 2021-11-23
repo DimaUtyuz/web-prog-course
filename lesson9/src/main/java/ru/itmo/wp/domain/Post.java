@@ -1,4 +1,4 @@
-package ru.itmo.wp.lesson8.domain;
+package ru.itmo.wp.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -8,20 +8,28 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+/** @noinspection unused*/
 @Entity
-@Table(
-        indexes = @Index(columnList = "creationTime")
-)
-public class Notice {
+@Table
+public class Post {
     @Id
     @GeneratedValue
     private long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @NotNull
     @NotEmpty
-    @Size(max=65000)
+    @Size(min = 1, max = 60)
+    private String title;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 1, max = 65000)
     @Lob
-    private String content;
+    private String text;
 
     @CreationTimestamp
     private Date creationTime;
@@ -34,12 +42,28 @@ public class Notice {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public User getUser() {
+        return user;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public Date getCreationTime() {
@@ -50,4 +74,3 @@ public class Notice {
         this.creationTime = creationTime;
     }
 }
-

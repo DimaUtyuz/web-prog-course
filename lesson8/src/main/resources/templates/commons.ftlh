@@ -47,7 +47,7 @@
             <#list notices?reverse as nt>
                 <section>
                     <div class="header">
-                        ${nt.id}
+                        ${nt.id?c}
                     </div>
                     <div class="body">
                         ${nt.content}

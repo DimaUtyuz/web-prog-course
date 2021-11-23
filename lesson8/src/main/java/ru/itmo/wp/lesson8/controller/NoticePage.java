@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.itmo.wp.lesson8.domain.Notice;
 import ru.itmo.wp.lesson8.form.NoticeCredentials;
-import ru.itmo.wp.lesson8.form.validator.NoticeCredentialsAddValidator;
 import ru.itmo.wp.lesson8.service.NoticeService;
 
 import javax.servlet.http.HttpSession;
@@ -19,22 +17,20 @@ import javax.validation.Valid;
 @Controller
 public class NoticePage extends Page {
     private final NoticeService noticeService;
-    private final NoticeCredentialsAddValidator noticeCredentialsAddValidator;
 
-    public NoticePage(NoticeService noticeService, NoticeCredentialsAddValidator noticeCredentialsAddValidator) {
+    public NoticePage(NoticeService noticeService) {
         this.noticeService = noticeService;
-        this.noticeCredentialsAddValidator = noticeCredentialsAddValidator;
-    }
-
-    @InitBinder("noticeForm")
-    public void initBinder(WebDataBinder binder) {
-        binder.addValidators(noticeCredentialsAddValidator);
     }
 
     @GetMapping("/notice")
     public String noticeGet(Model model, HttpSession httpSession) {
-        if (model.getAttribute("user") == null) {
+        if (getUser(httpSession) == null) {
             setMessage(httpSession, "You are not logged-in");
+            return "redirect:/";
+        }
+
+        if (getUser(httpSession).isDisabled()) {
+            setMessage(httpSession, "You are disabled");
             return "redirect:/";
         }
 
@@ -50,8 +46,13 @@ public class NoticePage extends Page {
             return "NoticePage";
         }
 
-        if (model.getAttribute("user") == null) {
+        if (getUser(httpSession) == null) {
             setMessage(httpSession, "You are not logged-in");
+            return "redirect:/";
+        }
+
+        if (getUser(httpSession).isDisabled()) {
+            setMessage(httpSession, "You are disabled");
             return "redirect:/";
         }
 

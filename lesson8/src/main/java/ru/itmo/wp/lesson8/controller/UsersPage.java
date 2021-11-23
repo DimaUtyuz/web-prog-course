@@ -33,7 +33,7 @@ public class UsersPage extends Page {
     public String updateStatusPost(@Valid @ModelAttribute("userStatus") UserStatus userStatus,
                               BindingResult bindingResult,
                               HttpSession httpSession, Model model) {
-        if (model.getAttribute("user") == null) {
+        if (getUser(httpSession) == null) {
             setMessage(httpSession, "You are not logged-in");
             return users(model);
         }
@@ -42,9 +42,9 @@ public class UsersPage extends Page {
             return users(model);
         }
 
-        User user = (User) model.getAttribute("user");
-        if (user.isDisabled()) {
-            setMessage(httpSession, "You are disabled");
+        User user = getUser(httpSession);
+        if (user.isDisabled() || user.getId() == userStatus.getId()) {
+            setMessage(httpSession, "You can not disable this user");
             return users(model);
         }
 
