@@ -10,6 +10,7 @@ import ru.itmo.wp.repository.TagRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class PostService {
@@ -39,7 +40,8 @@ public class PostService {
         post.setTitle(postCredentials.getTitle());
         post.setText(postCredentials.getText());
         post.setTags(new HashSet<>());
-        for (String tagName: postCredentials.getTags().trim().split("[ ]+")) {
+        for (String tagName: postCredentials.getTags().trim().split("\\s+")) {
+            tagName = tagName.toLowerCase();
             if (tagRepository.countByName(tagName) == 0) {
                 tagRepository.save(new Tag(tagName));
             }

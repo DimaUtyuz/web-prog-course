@@ -34,7 +34,11 @@
                                 <input type="submit" value="${u.disabled ? then("Enable", "Disable")}">
                             </form>
                         <#else>
-                            This is you
+                            <#if user??>
+                                This is you
+                           <#else>
+                                Unknown
+                           </#if>
                         </#if>
                     </td>
                 </tr>

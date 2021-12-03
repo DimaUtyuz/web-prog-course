@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="user" type="ru.itmo.wp.domain.User" -->
+<#-- @ftlvariable name="post" type="ru.itmo.wp.domain.Post" -->
 <#-- @ftlvariable name="message" type="java.lang.String" -->
 <#import "/spring.ftl" as spring/>
 <#macro page>
@@ -98,7 +99,9 @@
                 #${tag.name}
             </#list>
         </div>
-        <div class="body">${post.text}</div>
+        <div class="body">
+            <p>${post.text}</p>
+        </div>
         <ul class="attachment">
             <li>Announcement of <a href="#">Codeforces Round #510 (Div. 1)</a></li>
             <li>Announcement of <a href="#">Codeforces Round #510 (Div. 2)</a></li>
@@ -113,7 +116,7 @@
                 <img src="<@spring.url '/img/date_16x16.png'/>" title="Publish Time" alt="Publish Time"/>
                 ${post.creationTime}
                 <img src="<@spring.url '/img/comments_16x16.png'/>" title="Comments" alt="Comments"/>
-                <a href="#">68</a>
+                <a href="/post/${post.id}">${post.comments?size}</a>
             </div>
         </div>
     </article>

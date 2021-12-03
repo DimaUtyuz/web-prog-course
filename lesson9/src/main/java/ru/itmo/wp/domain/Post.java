@@ -44,6 +44,7 @@ public class Post {
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @OrderBy("name")
     private Set<Tag> tags;
 
     public long getId() {

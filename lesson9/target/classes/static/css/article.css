@@ -21,6 +21,10 @@ main article .body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+main article .body p {
+    white-space: pre-line;
+}
+
 main article .body p:last-child {
     margin: 0;
 }

@@ -23,7 +23,12 @@
         <#list postPage.comments as comment>
             <div class="comment">
                 <div class="information">By ${comment.user.login}, ${comment.creationTime?datetime}</div>
-                <div class="text">${comment.text}</div>
+                <div class="text">
+                    <p>${comment.text}</p>
+<#--                    <#list comment.text?split("\n") as pr>-->
+<#--                        <p>${pr}</p>-->
+<#--                    </#list>-->
+                </div>
             </div>
         </#list>
     <#else>
