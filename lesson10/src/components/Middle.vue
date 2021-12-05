@@ -44,7 +44,7 @@ export default {
     props: ["posts", "users", "comments"],
     methods: {
         commentsByPostId: function (postId) {
-            return Object.values(this.comments).filter(c => c.postId === postId)
+            return Object.values(this.comments).filter(c => c.postId === postId);
         }
     },
     computed: {
