@@ -1,8 +1,8 @@
 <template>
     <div id="app">
         <Header :userId="userId" :users="users"/>
-        <Middle :posts="posts"/>
-        <Footer/>
+        <Middle :posts="posts" :users="users" :comments="comments"/>
+        <Footer :countUsers="Object.keys(users).length" :countPosts="Object.keys(posts).length"/>
     </div>
 </template>
 
@@ -36,6 +36,25 @@ export default {
                 this.$root.$emit("onChangePage", "Index");
             }
         });
+
+      this.$root.$on("onRegister", (name, login, password) => {
+        if (!name || name.length > 32) {
+          this.$root.$emit("onRegisterValidationError", "Name should be 1-32 characters");
+        } else if (!login || login.length < 3 || login.length > 16 || !login.match('^[a-z]+$')) {
+          this.$root.$emit("onRegisterValidationError", "Login should be 3-16 lowercase Latin characters");
+        } else if (!password) {
+          this.$root.$emit("onRegisterValidationError", "Password is required");
+        } else if (Object.values(this.users).filter(u => u.login === login).length !== 0) {
+          this.$root.$emit("onRegisterValidationError", "Login is already exist");
+        } else {
+          const id = Math.max(...Object.keys(this.users)) + 1;
+          const admin = false;
+          this.$root.$set(this.users, id, {
+            id, login, name, admin
+          });
+          this.$root.$emit("onChangePage", "Enter");
+        }
+      });
 
         this.$root.$on("onLogout", () => this.userId = null);
 

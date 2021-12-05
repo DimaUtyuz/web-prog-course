@@ -29,7 +29,7 @@
                     <#list user.roles as role>
                         ${role.name}<#if role_has_next>,</#if>
                     </#list>
-                </td>
+                    </td>
                     <td class="creationTime">${user.creationTime}</td>
                 </tr>
                 </#list>
