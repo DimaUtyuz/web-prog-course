@@ -55,6 +55,7 @@ public class PostPage extends Page {
             return "redirect:/post/" + postId;
         }
         comment.setUser(getUser(httpSession));
+        comment.setText(comment.getText().trim());
         postService.commentPost(postService.findById(id), comment);
         putMessage(httpSession, "Congrats, you have been commented!");
 

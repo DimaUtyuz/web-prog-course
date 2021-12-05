@@ -37,8 +37,8 @@ public class PostService {
 
     public Post createPost(PostCredentials postCredentials) {
         Post post = new Post();
-        post.setTitle(postCredentials.getTitle());
-        post.setText(postCredentials.getText());
+        post.setTitle(postCredentials.getTitle().trim());
+        post.setText(postCredentials.getText().trim());
         post.setTags(new HashSet<>());
         for (String tagName: postCredentials.getTags().trim().split("\\s+")) {
             tagName = tagName.toLowerCase();
