@@ -1,8 +1,8 @@
 <template>
   <article>
     <a href="#" class="title" @click.prevent="showPost(post)">{{ post.title }}</a>
-    <div class="information">By {{ users[post.userId].login }} </div>
-    <div class="body"> <p>{{ post.text }}</p> </div>
+    <div class="information">By {{ post.user.login }}</div>
+    <div class="body"><p>{{ post.text }}</p></div>
     <ul class="attachment">
       <li>Announcement of <a href="#">Codeforces Round #510 (Div. 1)</a></li>
       <li>Announcement of <a href="#">Codeforces Round #510 (Div. 2)</a></li>
@@ -22,8 +22,8 @@
     </div>
     <div class="comments" v-if="showComments">
       <div class="comment" v-for="comment in comments" :key="comment.id">
-        <div class="information">By {{ users[comment.userId].login }}</div>
-        <div class="text">By {{ comment.text}}</div>
+        <div class="information">By {{ comment.user.login }}</div>
+        <div class="text">{{ comment.text }}</div>
       </div>
     </div>
   </article>
@@ -32,9 +32,9 @@
 <script>
 export default {
   name: "Post",
-  props: ["post", "comments", "users", "showComments"],
+  props: ["post", "comments", "showComments"],
   methods: {
-    showPost: function(post) {
+    showPost: function (post) {
       this.$root.$emit("onShowPost", post);
     }
   }

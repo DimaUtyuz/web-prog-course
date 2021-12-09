@@ -1,8 +1,7 @@
 <template>
     <div>
         <Post v-for="post in sortPost()"
-              :post="post" :comments="commentsByPostId(post.id)"
-              :showComments="false" :users="users" :key="post.id">
+              :post="post" :comments="commentsByPostId(post.id)" :showComments="false" :key="post.id">
         </Post>
     </div>
 </template>
@@ -20,7 +19,7 @@ export default {
       return Object.values(this.posts).sort((a, b) => b.id - a.id);
     }
   },
-  props: ["posts", "users", "commentsByPostId"]
+  props: ["posts", "commentsByPostId"]
 }
 </script>
 

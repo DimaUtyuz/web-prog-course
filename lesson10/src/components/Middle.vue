@@ -2,9 +2,9 @@
     <div class="middle">
         <Sidebar :posts="viewPosts"/>
         <main>
-            <Index v-if="page === 'Index'" :posts="posts" :users="users" :commentsByPostId="commentsByPostId"/>
+            <Index v-if="page === 'Index'" :posts="addUsers()" :commentsByPostId="commentsByPostId"/>
             <Users v-if="page === 'Users'" :users="users"/>
-            <Post v-if="page === 'Post'" :post="post" :comments="commentsByPostId(post.id)" :users="users" :showComments="true"/>
+            <Post v-if="page === 'Post'" :post="addUser(post)" :comments="commentsByPostId(post.id)" :showComments="true"/>
             <Enter v-if="page === 'Enter'"/>
             <Register v-if="page === 'Register'"/>
             <WritePost v-if="page === 'WritePost'"/>
@@ -44,7 +44,14 @@ export default {
     props: ["posts", "users", "comments"],
     methods: {
         commentsByPostId: function (postId) {
-            return Object.values(this.comments).filter(c => c.postId === postId);
+            return Object.values(this.comments).filter(c => c.postId === postId).map(c => {c.user = this.users[c.userId]; return c});
+        },
+        addUser: function (post) {
+          post.user = this.users[post.userId];
+          return post;
+        },
+        addUsers: function () {
+          return Object.values(this.posts).map(p => {p.user = this.users[p.userId]; return p});
         }
     },
     computed: {

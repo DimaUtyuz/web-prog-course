@@ -8,8 +8,8 @@
             <a href="#"><img src="../assets/img/ru.png" alt="In Russian" title="In Russian"/></a>
         </div>
         <div class="enter-or-register-box">
-            <template v-if="userId">
-                {{ users[userId].name + " (" + users[userId].login + ")"}}
+            <template v-if="user">
+                {{ user.name + " (" + user.login + ")"}}
                 |
                 <a href="#" @click.prevent="onLogout">Logout</a>
             </template>
@@ -23,8 +23,8 @@
             <ul>
                 <li><a href="#" @click.prevent="changePage('Index')">Home</a></li>
                 <li><a href="#" @click.prevent="changePage('Users')">Users</a></li>
-                <li v-if="userId"><a href="#" @click.prevent="changePage('WritePost')">Write Post</a></li>
-                <li v-if="userId"><a href="#" @click.prevent="changePage('EditPost')">Edit Post</a></li>
+                <li v-if="user"><a href="#" @click.prevent="changePage('WritePost')">Write Post</a></li>
+                <li v-if="user"><a href="#" @click.prevent="changePage('EditPost')">Edit Post</a></li>
             </ul>
         </nav>
     </header>
@@ -34,7 +34,7 @@
 <script>
 export default {
     name: "Header",
-    props: ["userId", "users"],
+    props: ["user"],
     methods: {
         changePage: function (page) {
             this.$root.$emit("onChangePage", page);
