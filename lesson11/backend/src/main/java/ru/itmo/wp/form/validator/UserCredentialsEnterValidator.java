@@ -3,7 +3,7 @@ package ru.itmo.wp.form.validator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.itmo.wp.form.UserCredentials;
+import ru.itmo.wp.form.UserCredentialsEnter;
 import ru.itmo.wp.service.UserService;
 
 @Component
@@ -15,12 +15,12 @@ public class UserCredentialsEnterValidator implements Validator {
     }
 
     public boolean supports(Class<?> clazz) {
-        return UserCredentials.class.equals(clazz);
+        return UserCredentialsEnter.class.equals(clazz);
     }
 
     public void validate(Object target, Errors errors) {
         if (!errors.hasErrors()) {
-            UserCredentials enterForm = (UserCredentials) target;
+            UserCredentialsEnter enterForm = (UserCredentialsEnter) target;
             if (userService.findByLoginAndPassword(enterForm.getLogin(), enterForm.getPassword()) == null) {
                 errors.reject("invalid-login-or-password", "Invalid login or password");
             }

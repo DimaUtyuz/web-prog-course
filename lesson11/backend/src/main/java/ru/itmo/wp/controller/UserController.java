@@ -1,13 +1,16 @@
 package ru.itmo.wp.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import ru.itmo.wp.domain.User;
+import ru.itmo.wp.exception.ValidationException;
+import ru.itmo.wp.form.UserCredentialsRegister;
+import ru.itmo.wp.form.validator.UserCredentialsRegisterValidator;
 import ru.itmo.wp.service.JwtService;
 import ru.itmo.wp.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,10 +18,17 @@ import java.util.List;
 public class UserController {
     private final JwtService jwtService;
     private final UserService userService;
+    private final UserCredentialsRegisterValidator userCredentialsRegisterValidator;
 
-    public UserController(JwtService jwtService, UserService userService) {
+    public UserController(JwtService jwtService, UserService userService, UserCredentialsRegisterValidator userCredentialsRegisterValidator) {
         this.jwtService = jwtService;
         this.userService = userService;
+        this.userCredentialsRegisterValidator = userCredentialsRegisterValidator;
+    }
+
+    @InitBinder("userCredentialsRegister")
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(userCredentialsRegisterValidator);
     }
 
     @GetMapping("users/auth")
@@ -29,5 +39,15 @@ public class UserController {
     @GetMapping("users")
     public List<User> findUsers() {
         return userService.findAll();
+    }
+
+    @PostMapping("users")
+    public String create(@RequestBody @Valid UserCredentialsRegister userCredentialsRegister, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+
+        User user = userService.register(userCredentialsRegister);
+        return jwtService.create(user);
     }
 }

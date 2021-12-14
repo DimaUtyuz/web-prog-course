@@ -10,12 +10,13 @@ main article .title {
 }
 
 main article .information {
-    margin-top: 0.25rem;
+    margin: 0.5rem 0;
     font-size: 0.85rem;
     color: #888;
 }
 
 main article .body {
+    white-space: pre-line;
     border-left: 4px solid var(--border-color);
     padding-left: 0.75rem;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -34,7 +35,7 @@ main article .attachment li {
     list-style: none;
     padding: 0.25rem 20px;
     margin: 0;
-    background: url("../img/paperclip-16x16.png") 0 2px no-repeat;
+    background: url("../../src/assets/img/paperclip-16x16.png") 0 2px no-repeat;
     font-size: 0.75rem;
     color: #888;
 }
@@ -44,7 +45,7 @@ main article .footer {
     border-radius: var(--border-radius);
     overflow: hidden;
     padding: 0.1rem;
-    margin-top: 0.25rem;
+    margin: 0.5rem 0;
 }
 
 main article .footer .left {
@@ -74,4 +75,28 @@ main article .footer .positive-score {
     color: green;
     font-weight: bold;
     line-height: 1.75rem;
+}
+
+main article .comment {
+    margin-bottom: 1rem;
+}
+
+main article .comment .information {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+main article .comment .text {
+    border-left: 4px solid var(--border-color);
+    padding-left: 0.75rem;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+main article .comment .text p {
+    white-space: pre-line;
+}
+
+main article .comment .text p:last-child {
+    margin: 0;
 }

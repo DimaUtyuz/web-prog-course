@@ -1,21 +1,25 @@
 <template>
-    <div>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium
-        alias architecto beatae commodi consequuntur distinctio doloremque,
-        ea eligendi eveniet, exercitationem fuga id maiores minima modi nemo
-        neque nesciunt non nostrum officiis optio quaerat quas recusandae
-        reiciendis saepe temporibus. At deserunt quis repudiandae sapiente voluptatum.
-        Ea error maiores nulla ratione vitae. Amet aperiam consequuntur corporis cum
-        cumque delectus dicta dolor doloribus eaque eligendi eos esse et
-        expedita explicabo fugit hic impedit in ipsa labore laudantium modi molestias nisi numquam
-        omnis quaerat quam quidem quis quo repellendus repudiandae similique soluta, tempora ut vel
-        veritatis vitae voluptatum! Aliquid deserunt doloremque et minus soluta?
-    </div>
+  <div>
+    <Post v-for="post in sortPost()"
+          :post="post" :showComments="false" :key="post.id">
+    </Post>
+  </div>
 </template>
 
 <script>
+import Post from "./Post";
+
 export default {
-    name: "Index"
+  name: "Index",
+  components: {
+    Post
+  },
+  methods: {
+    sortPost: function () {
+      return Object.values(this.posts).sort((a, b) => b.id - a.id);
+    }
+  },
+  props: ["posts"]
 }
 </script>
 

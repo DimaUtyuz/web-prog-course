@@ -5,7 +5,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.itmo.wp.domain.User;
 import ru.itmo.wp.exception.ValidationException;
-import ru.itmo.wp.form.UserCredentials;
+import ru.itmo.wp.form.UserCredentialsEnter;
 import ru.itmo.wp.form.validator.UserCredentialsEnterValidator;
 import ru.itmo.wp.service.JwtService;
 import ru.itmo.wp.service.UserService;
@@ -25,18 +25,18 @@ public class JwtController extends ApiController {
         this.userCredentialsEnterValidator = userCredentialsEnterValidator;
     }
 
-    @InitBinder("userCredentials")
+    @InitBinder("userCredentialsEnter")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(userCredentialsEnterValidator);
     }
 
     @PostMapping("jwt")
-    public String create(@RequestBody @Valid UserCredentials userCredentials, BindingResult bindingResult) {
+    public String create(@RequestBody @Valid UserCredentialsEnter userCredentialsEnter, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(bindingResult);
         }
 
-        User user = userService.findByLoginAndPassword(userCredentials.getLogin(), userCredentials.getPassword());
+        User user = userService.findByLoginAndPassword(userCredentialsEnter.getLogin(), userCredentialsEnter.getPassword());
         return jwtService.create(user);
     }
 }

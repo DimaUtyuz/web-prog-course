@@ -2,7 +2,7 @@
   <div class="middle">
     <Sidebar :posts="viewPosts"/>
     <main>
-      <Index v-if="page === 'Index'"/>
+      <Index v-if="page === 'Index'" :posts="posts"/>
       <Enter v-if="page === 'Enter'"/>
       <Register v-if="page === 'Register'"/>
       <Users v-if="page === 'Users'" :users="users"/>

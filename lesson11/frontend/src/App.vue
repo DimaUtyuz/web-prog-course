@@ -50,13 +50,29 @@ export default {
         login, password
       }).then(response => {
         localStorage.setItem("jwt", response.data);
-        this.$root.$emit("onJwt", response.data);
+        this.$root.$emit("onJwt", response.data, "onLogout");
       }).catch(error => {
         this.$root.$emit("onEnterValidationError", error.response.data);
       });
     });
 
-    this.$root.$on("onJwt", (jwt) => {
+    this.$root.$on("onRegister", (name, login, password) => {
+      if (password === "") {
+        this.$root.$emit("onRegisterValidationError", "Password is required");
+        return;
+      }
+
+      axios.post("/api/1/users", {
+        name, login, password
+      }).then(response => {
+        localStorage.setItem("jwt", response.data);
+        this.$root.$emit("onJwt", response.data, "onRegister");
+      }).catch(error => {
+        this.$root.$emit("onRegisterValidationError", error.response.data);
+      });
+    });
+
+    this.$root.$on("onJwt", (jwt, errorEvent) => {
       localStorage.setItem("jwt", jwt);
 
       axios.get("/api/1/users/auth", {
@@ -66,7 +82,7 @@ export default {
       }).then(response => {
         this.user = response.data;
         this.$root.$emit("onChangePage", "Index");
-      }).catch(() => this.$root.$emit("onLogout"))
+      }).catch(() => this.$root.$emit(errorEvent))
     });
 
     this.$root.$on("onLogout", () => {
