@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header :user="user"/>
-    <Middle :posts="posts" :users="users"/>
+    <Middle :posts="posts" :users="users" :user:="user"/>
     <Footer/>
   </div>
 </template>
@@ -105,6 +105,23 @@ export default {
         this.$root.$emit("onChangePage", "Index");
       }).catch(error => {
         this.$root.$emit("onWritePostValidationError", error.response.data);
+      });
+    });
+
+    this.$root.$on("onComment", (text, postId) => {
+      if (this.user === null) {
+        this.$root.$emit("onCommentValidationError", "No User");
+        return;
+      }
+      let userId = this.user.id;
+      axios.post("/api/1/comment", {
+        text, userId, postId
+      }).then(() => {
+        axios.get("/api/1/posts").then(response => {
+          this.posts = response.data;
+        });
+      }).catch(error => {
+        this.$root.$emit("onCommentValidationError", error.response.data);
       });
     });
   }

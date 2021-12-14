@@ -50,47 +50,39 @@
     margin-left: 9rem;
 }
 
-/* form */
-.form {
-    width: 36rem;
-    margin: 0 auto;
-}
-
-.form .header {
-    color: var(--caption-color);
-    font-weight: bold;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-}
-
-.form .field {
-    margin-bottom: 1rem;
-}
-
-.form .field .name {
-}
-
-.form .field .value {
-    width: 35rem;
-}
-
-.form .field input, .form .field textarea {
+/* comment-form-box */
+.comment-form-box {
     width: 100%;
+    margin: 1rem 0;
 }
 
-.form .field textarea {
-    min-height: 10rem;
+.comment-form-box .field {
+    margin-bottom: 1rem;
 }
 
-.form .button-field {
+.comment-form-box .field .value {
+    width: auto;
+    height: 7rem;
 }
 
-.form .button-field input {
+.comment-form-box .field textarea {
+    resize: none;
+    width: 99%;
+    height: 95%;
+}
+
+.comment-form-box .field textarea {
+    min-height: 6rem;
+}
+
+.comment-form-box .button-field {
+}
+
+.comment-form-box .button-field input {
     padding: 0.1rem 1.5rem;
 }
 
-.form .error {
+.comment-form-box .error {
     color: var(--error-color);
     font-size: 0.75rem;
-    margin: 0.2rem 0;
 }
