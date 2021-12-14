@@ -17,11 +17,11 @@
         <img src="@/assets/img/date_16x16.png/" title="Publish Time" alt="Publish Time"/>
         01.01.1970
         <img src="@/assets/img/comments_16x16.png" title="Comments" alt="Comments"/>
-        <a href="#" @click.prevent="showPost(post)">{{ comments.length }}</a>
+        <a href="#" @click.prevent="showPost(post)">{{ post.comments.length }}</a>
       </div>
     </div>
     <div class="comments" v-if="showComments">
-      <div class="comment" v-for="comment in comments" :key="comment.id">
+      <div class="comment" v-for="comment in post.comments" :key="comment.id">
         <div class="information">By {{ comment.user.login }}</div>
         <div class="text">{{ comment.text }}</div>
       </div>
@@ -32,7 +32,7 @@
 <script>
 export default {
   name: "Post",
-  props: ["post", "comments", "showComments"],
+  props: ["post", "showComments"],
   methods: {
     showPost: function (post) {
       this.$root.$emit("onShowPost", post);

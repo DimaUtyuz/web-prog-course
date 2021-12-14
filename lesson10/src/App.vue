@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header :user="users[userId]"/>
-    <Middle :posts="posts" :users="users" :comments="comments"/>
+    <Middle :posts="addCommentsAndUserToPost(posts, users, comments)" :users="users"/>
     <Footer :countUsers="Object.keys(users).length" :countPosts="Object.keys(posts).length"/>
   </div>
 </template>
@@ -21,6 +21,16 @@ export default {
   data: function () {
     return this.$root.$data;
   },
+  methods: {
+    addCommentsAndUserToPost(posts, users, comments) {
+      Object.values(posts).map(p => {p.comments = []; return p});
+      Object.values(comments).forEach(c => {
+        c.user = users[c.userId];
+        posts[c.postId].comments.push(c);
+      });
+      return Object.values(posts).map(p => {p.user = users[p.userId]; return p})
+    }
+  },
   beforeCreate() {
     this.$root.$on("onEnter", (login, password) => {
       if (password === "") {
@@ -38,7 +48,7 @@ export default {
     });
 
     this.$root.$on("onRegister", (name, login, password) => {
-      if (!name || name.length > 32) {
+      if (!name || name.length < 1 || name.length > 32) {
         this.$root.$emit("onRegisterValidationError", "Name should be 1-32 characters");
       } else if (!login || login.length < 3 || login.length > 16 || !login.match('^[a-z]+$')) {
         this.$root.$emit("onRegisterValidationError", "Login should be 3-16 lowercase Latin characters");
