@@ -1,7 +1,6 @@
 package ru.itmo.wp.domain;
 
 import org.hibernate.annotations.CreationTimestamp;
-import ru.itmo.wp.form.PostCredentials;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;

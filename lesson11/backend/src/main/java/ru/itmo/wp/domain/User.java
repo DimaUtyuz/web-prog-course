@@ -30,7 +30,8 @@ public class User {
     @CreationTimestamp
     private Date creationTime;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OrderBy("creationTime desc")
     private List<Post> posts;
 
     public long getId() {
@@ -74,7 +75,7 @@ public class User {
     }
 
     public void addPost(Post post) {
-        posts.add(post);
         post.setUser(this);
+        posts.add(post);
     }
 }

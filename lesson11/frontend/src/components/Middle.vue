@@ -6,6 +6,7 @@
       <Enter v-if="page === 'Enter'"/>
       <Register v-if="page === 'Register'"/>
       <Users v-if="page === 'Users'" :users="users"/>
+      <WritePost v-if="page === 'WritePost'"/>
     </main>
   </div>
 </template>
@@ -16,6 +17,7 @@ import Index from "./main/Index";
 import Enter from "./main/Enter";
 import Register from "./main/Register";
 import Users from "./main/Users";
+import WritePost from "@/components/main/WritePost";
 
 export default {
   name: "Middle",
@@ -25,6 +27,7 @@ export default {
     }
   },
   components: {
+    WritePost,
     Register,
     Enter,
     Index,

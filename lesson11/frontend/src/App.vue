@@ -90,6 +90,23 @@ export default {
       this.user = null;
     });
 
+    this.$root.$on("onWritePost", (title, text) => {
+      if (this.user === null) {
+        this.$root.$emit("onWritePostValidationError", "No User");
+        return;
+      }
+      let userId = this.user.id;
+      axios.post("/api/1/posts", {
+        title, text, userId
+      }).then(() => {
+        axios.get("/api/1/posts").then(response => {
+          this.posts = response.data;
+        });
+        this.$root.$emit("onChangePage", "Index");
+      }).catch(error => {
+        this.$root.$emit("onWritePostValidationError", error.response.data);
+      });
+    });
   }
 }
 </script>

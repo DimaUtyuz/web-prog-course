@@ -23,6 +23,7 @@
             <ul>
                 <li><a href="#" @click.prevent="changePage('Index')">Home</a></li>
                 <li><a href="#" @click.prevent="changePage('Users')">Users</a></li>
+                <li><a href="#" @click.prevent="changePage('WritePost')">Write Post</a></li>
             </ul>
         </nav>
     </header>

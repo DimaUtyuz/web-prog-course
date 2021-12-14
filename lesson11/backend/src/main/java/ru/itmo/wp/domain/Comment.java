@@ -3,24 +3,24 @@ package ru.itmo.wp.domain;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
 
+/** @noinspection unused*/
 @Entity
-public class Post {
+@Table
+public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long id;
 
+    @NotNull
     @NotEmpty
-    @Size(min = 1, max = 100)
-    private String title;
-
-
-    @NotEmpty
-    @Size(min = 1, max = 10000)
+    @NotBlank
+    @Size(min = 1, max = 65000)
     @Lob
     private String text;
 
@@ -28,12 +28,12 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
     @CreationTimestamp
     private Date creationTime;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @OrderBy("creationTime desc")
-    private List<Comment> comments;
 
     public long getId() {
         return id;
@@ -41,14 +41,6 @@ public class Post {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getText() {
@@ -67,19 +59,19 @@ public class Post {
         this.user = user;
     }
 
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
     public Date getCreationTime() {
         return creationTime;
     }
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }
