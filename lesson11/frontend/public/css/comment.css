@@ -15,7 +15,7 @@ main .comment .text {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-main .comment .text p {
+main .comment .text {
     white-space: pre-line;
 }
 

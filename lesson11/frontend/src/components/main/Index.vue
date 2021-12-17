@@ -1,8 +1,7 @@
 <template>
   <div>
     <Post v-for="post in sortPost()"
-          :post="post" :showComments="false" :key="post.id">
-    </Post>
+          :post="post" :showComments="false" :key="post.id"/>
   </div>
 </template>
 

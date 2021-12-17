@@ -86,3 +86,48 @@
     color: var(--error-color);
     font-size: 0.75rem;
 }
+
+/* form */
+.form {
+    width: 36rem;
+    margin: 0 auto;
+}
+
+.form .header {
+    color: var(--caption-color);
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.form .field {
+    margin-bottom: 1rem;
+}
+
+.form .field .name {
+}
+
+.form .field .value {
+    width: 35rem;
+}
+
+.form .field input, .form .field textarea {
+    width: 100%;
+}
+
+.form .field textarea {
+    min-height: 10rem;
+}
+
+.form .button-field {
+}
+
+.form .button-field input {
+    padding: 0.1rem 1.5rem;
+}
+
+.form .error {
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin: 0.2rem 0;
+}
